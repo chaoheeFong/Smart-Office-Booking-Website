@@ -10,3 +10,6 @@ Insert 'npm run dev' into cmd then follow by 'php artisan serve' in another cmd.
 
 #Setup
 'npm install' Install all dependencies that has used by others
+
+#Style documentation (PrimeFlex)
+https://www.primefaces.org/primeflex/gridsystem
