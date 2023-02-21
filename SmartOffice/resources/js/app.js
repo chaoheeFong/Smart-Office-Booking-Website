@@ -1,7 +1,8 @@
 import './bootstrap';
 import '/node_modules/primeflex/primeflex.css'
 import 'primeicons/primeicons.css';
-import { createApp } from 'vue';
-import App from '../views/Admin/dashboard.vue';
+import '../sass/app.scss';
+import 'primevue/resources/themes/saga-blue/theme.css';       //theme
+import 'primevue/resources/primevue.min.css';                 //core css
+import 'primeicons/primeicons.css'                           //icons
 
-createApp(App).mount("#app");
