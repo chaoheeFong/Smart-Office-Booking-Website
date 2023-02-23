@@ -20,3 +20,9 @@ Route::get('/', function () {
 Route::get('/admin', function () {
     return view('Admin/admin');
 });
+Route::get('/bookingList', function () {
+    return view('Admin/adminBookingList');
+});
+Route::get('/roomList', function () {
+    return view('Admin/adminRoomList');
+});
