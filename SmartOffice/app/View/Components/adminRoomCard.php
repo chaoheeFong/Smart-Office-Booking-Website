@@ -11,9 +11,14 @@ class adminRoomCard extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $isApproved = true | false;
+
+    public function __construct($isApproved = true)
     {
-        //
+       
+            $this->isApproved = $isApproved;//
+        
+        
     }
 
     /**
