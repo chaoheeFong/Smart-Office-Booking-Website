@@ -9,8 +9,12 @@ https://techvblogs.com/blog/how-to-install-vue-3-in-laravel-9-with-vite
 Insert 'npm run dev' into cmd then follow by 'php artisan serve' in another cmd.
 
 #Setup
+'cd SmartOffice'
 'npm install' Install all dependencies that has used by others
 'npm run dev' Run the dev server
+'composer install' 
+'php artisan serve'
+'npm install --save-dev sass'
 
 #Style documentation (PrimeFlex)
 https://www.primefaces.org/primeflex/
