@@ -40,13 +40,12 @@
         <div>
             <h1>Room Request</h1>
             <div class="fullListBox">
-                <x-admin-room-card />
-                <x-admin-room-card />
-                <x-admin-room-card />
-                <x-admin-room-card />
-                <x-admin-room-card />
-                <x-admin-room-card />
-                <x-admin-room-card />
+                <x-admin-room-card isApproved=0/>
+                <x-admin-room-card isApproved=0/>
+                <x-admin-room-card isApproved=0/>
+                <x-admin-room-card isApproved=0/>
+                <x-admin-room-card isApproved=0/>
+
             </div>
         </div>
     </div>

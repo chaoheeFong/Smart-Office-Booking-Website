@@ -35,8 +35,9 @@
                 </div>
                 <h1>Room Request</h1>
                 <div class="h-10rem listBox">
+
                     @foreach ($bookings as $item)
-                        <x-admin-room-card />
+                        <x-admin-room-card isApproved=0/>
                     @endforeach
                     <a href="" class="no-underline text-cyan-900">Show More...</a>
                 </div>
