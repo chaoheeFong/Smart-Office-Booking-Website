@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+//Admin route 
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,4 +26,18 @@ Route::get('/bookingList', function () {
 });
 Route::get('/roomList', function () {
     return view('Admin/adminRoomList');
+});
+
+//User route
+
+Route::get('/home', function () {
+    return view('User/home');
+});
+
+Route::get('/apply', function () {
+    return view('User/apply');
+});
+
+Route::get('/mybooking', function () {
+    return view('User/mybooking');
 });
