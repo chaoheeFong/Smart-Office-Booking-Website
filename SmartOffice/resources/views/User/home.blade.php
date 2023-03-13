@@ -1,13 +1,13 @@
-@extends('User/layout')
+@extends('layouts.userLayout')
 @section('main_content')
 <head>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <h2 class="p-2 text-white">Welcome :)</h1>
+    <h2 class="p-2 text-white">Welcome {{Auth::user()->name}} :)</h1>
 </head>
 <body>
 
 
-<container>
+@section('content')
 
 <form class="row" method="GET" action="/search">
     <div class="col-10">
@@ -62,4 +62,5 @@
 <form action="/apply">
     <button class="btn btn-md btn-warning text-white" type="submit" action="/apply">Apply</button>
 </form>
+
 @endsection

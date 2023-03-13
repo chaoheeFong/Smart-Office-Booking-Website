@@ -16,7 +16,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite('resources/sass/admin.scss')
     @vite('resources/js/app.js')
-    <script src="resources/js/app.js"></script>
     <title>Admin Panel</title>
 </head>
 <body>
