@@ -77,7 +77,7 @@ export default class UserCreate extends Component {
                     duration: "", end_time: "", meeting_room_id: "" , status_id: 1},
                 })
             })
-            location.replace("user/home");
+            location.replace("home");
         }
         else{
             alert("This timeslot is not available. Please choose another timeslot or meeting_room.");

@@ -15,6 +15,7 @@ Insert 'npm run dev' into cmd then follow by 'php artisan serve' in another cmd.
 'composer install' 
 'php artisan serve'
 'npm install --save-dev sass'
+'composer require laravel/ui --dev'
 
 #Create Database
 Database name: smartoffice

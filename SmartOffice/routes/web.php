@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     //Admin route 
     Route::get('/', function () {
-        return view('/home');
+        return view('/User/home');
     });
     Route::get('/admin', function () {
         return view('Admin/admin');
@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //User route
     Route::get('/home', function () {
-        return view('User/home');
+        return view('/User/home');
     });
 
     Route::get('/apply', function () {
@@ -45,14 +45,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/mybooking', function () {
         return view('User/mybooking');
     });
+
+    Route::permanentRedirect('/login', '/home');
 });
 
-Route::get('/login', [LoginController::class,'showLoginForm'])->name('login');
-Route::get('/register/user', [RegisterController::class,'showUserRegisterForm'])->name('register');
-Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
-Route::post('/login', [LoginController::class,'userLogin']);
-Route::post('/register', [RegisterController::class,'registerUser']);
+Route::group(['middleware' => ['prevent-history', 'guest']], function(){
+    Route::get('/login', [LoginController::class,'showLoginForm'])->name('login');
+    Route::get('/register/user', [RegisterController::class,'showUserRegisterForm'])->name('register');
+    Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
+    Route::post('/login', [LoginController::class,'userLogin']);
+    Route::post('/register', [RegisterController::class,'registerUser']);
 
+    
+    Auth::routes();
+});
 Route::get('logout', [LoginController::class,'logout']);
 
-Auth::routes();
+

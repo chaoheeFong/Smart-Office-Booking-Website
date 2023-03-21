@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enum\UserRoleEnum;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -32,7 +34,7 @@ class RegisterController extends Controller
      * @var string
      */
     protected function redirectTo() {
-        if (Auth::user()->role == 'user') {
+        if (Auth::user()->role == UserRoleEnum::User) {
             return '/home';
         } else {
             return '/admin';
@@ -100,10 +102,10 @@ class RegisterController extends Controller
         ]);
 
         if ($request->role == 'admin') {
-            return redirect()->intended('/admin');
+            return Route::permanentRedirect('/register','/admin');
         }
         else{
-            return redirect()->intended('/home');
+            return Route::permanentRedirect('/register','/home');
         }
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Enum\UserRoleEnum;
+use Illuminate\Support\Facades\Route;
 class LoginController extends Controller
 {
     /*
@@ -58,16 +59,16 @@ class LoginController extends Controller
 
         if(Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             if(Auth::user()->role == UserRoleEnum::Admin){
-                return redirect()->intended('/admin');
+                return Route::permanentRedirect('/login','/admin');
             }
             else{
-                return redirect()->intended('/home');
+                return Route::permanentRedirect('/login','/home');
             }
         }
     }
 
     public function logout() {
         Auth::logout();
-        return redirect('login');
+        return redirect('/login');
     }
 }
