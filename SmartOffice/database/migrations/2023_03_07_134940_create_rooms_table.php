@@ -17,10 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('location', 250);
-            $table->string('description', 500);
-            $table->integer('price');
+            $table->longText('description')->nullable();
+            $table->double('price');
             $table->integer('capacity');
+            $table->unsignedBigInteger('user_id')->default('1');
+            $table->boolean('approve')->nullable()->default(false);
             $table->timestamps();   
+            $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

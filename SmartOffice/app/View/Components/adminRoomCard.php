@@ -12,12 +12,12 @@ class adminRoomCard extends Component
      * Create a new component instance.
      */
     public $isApproved = true | false;
-
-    public function __construct($isApproved = true)
+    public $roomDetails;
+    public function __construct($isApproved = true, $roomDetails)
     {
        
-            $this->isApproved = $isApproved;//
-        
+            $this->isApproved = $isApproved;
+            $this->roomDetails = $roomDetails;
         
     }
 

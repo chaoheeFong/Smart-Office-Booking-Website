@@ -1,36 +1,18 @@
 @extends('layouts.userLayout')
 @section('main_content')
-
+<div class="container">
 <div>
     <h4 class="text-white">Please fill your information into the form below to apply:</h2>
 </div>
 
-<form class="row" method="POST">
+<form action="/addRoom" class="row" method="post">
+    @csrf
     <div class="col-10">
-        <input class="form-control" type="email" placeholder="Email">
+        <input name="name" class="form-control" type="text" placeholder="Name">
     </div>
+    
     <div class="col-10">
-        <div class="input-group date" id="datepicker1">
-          <input autocomplete="off" type="text" class="form-control" id="dfrom" placeholder="Start Date" name="dfrom" value="{{old('dfrom')}}"/>
-          <span class="input-group-append">
-            <span class="input-group-text bg-light d-block" placeholder="to">
-              <i class="fa fa-calendar"></i>
-            </span>
-          </span>
-        </div>
-    </div>
-    <div class="col-10">
-        <div class="input-group date" id="datepicker2">
-          <input autocomplete="on" type="text" class="form-control" id="dto"  placeholder="End Date" name="dto"  value="{{old('dto')}}"/>
-          <span class="input-group-append">
-            <span class="input-group-text bg-light d-block">
-              <i class="fa fa-calendar"></i>
-            </span>
-          </span>
-        </div>
-    </div>
-    <div class="col-10">
-        <select class="form-control">
+        <select class="form-control" name="location">
             <option>Kuala Lumpur</option>
             <option>Cheras</option>
             <option>Kajang</option>
@@ -38,18 +20,29 @@
         </select>
     </div>
     <div class="col-10">
-        <input class="form-control" type="textarea" placeholder="Description">
+        <input class="form-control" name="description" type="textarea" placeholder="Description">
+    </div>
+    <div class="col-10">
+        <input name="price" class="form-control" type="number" placeholder="Price">
+    </div>
+    <div class="col-10">
+        <input name="capacity" class="form-control" type="number" placeholder="Capacity">
     </div>
     <div class="col-10">
         <div class="form-control">
             <label>Image of the office: </label>
-            <input type="file"><br>
+            <input type="file" name="image"><br>
         </div>
     </div>
+    @if($errors->any())
+        @foreach ($errors->all() as $error)
+            <li class="text-white">{{ $error }}</li>
+        @endforeach
+    @endif
     <div class="col-10">
         <button class="btn btn-md btn-warning text-white" type="submit">Submit</button>
     </div>
 </form>
 
-
+</div>
 @endsection

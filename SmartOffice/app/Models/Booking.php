@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
@@ -25,4 +27,24 @@ class Booking extends Model
     protected $casts = [
         'status' => \App\Enum\BookingStatusEnum::class,
     ];
+
+    /**
+     * Get the user that owns the Booking
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the room associated with the Booking
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function room()
+    {
+        return $this->hasOne(Room::class);
+    }
 }

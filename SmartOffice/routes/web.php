@@ -3,9 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\Auth\LoginController;
+
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,13 +23,8 @@ use Illuminate\Support\Facades\Gate;
 
 Route::group(['middleware' => 'auth'], function () {
     
-    //Admin route 
-    Route::get('/', function () {
-        return view('/User/home');
-    });
-    Route::get('/admin', function () {
-        return view('Admin/admin');
-    });
+    //Admin route  
+    Route::get('/admin', [UserController::class, 'adminReadList']);
     Route::get('/bookingList', function () {
         return view('Admin/adminBookingList');
     });
@@ -33,19 +32,29 @@ Route::group(['middleware' => 'auth'], function () {
         return view('Admin/adminRoomList');
     });
 
+    //admin action
+    Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
+    Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
     //User route
-    Route::get('/home', function () {
-        return view('/User/home');
+    Route::get('/', function () {
+        return redirect('/home');
     });
 
-    Route::get('/apply', function () {
-        return view('User/apply');
-    });
-
+    Route::get('/apply', [RoomController::class, 'create']);
+    Route::post('/addRoom', [RoomController::class, 'store']);
     Route::get('/mybooking', function () {
         return view('User/mybooking');
     });
 
+    Route::get('/home', [RoomController::class, 'roomslist']);
+
+    Route::get('/search', [RoomController::class, 'search']);
+
+    Route::get('/room/{id}',  [RoomController::class, 'oneroom']);
+
+    Route::post('/bookingConfirmation',  [BookingController::class, 'bookingConfirmation']);
+
+    
     Route::permanentRedirect('/login', '/home');
 });
 
@@ -55,8 +64,6 @@ Route::group(['middleware' => ['prevent-history', 'guest']], function(){
     Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
     Route::post('/login', [LoginController::class,'userLogin']);
     Route::post('/register', [RegisterController::class,'registerUser']);
-
-    
     Auth::routes();
 });
 Route::get('logout', [LoginController::class,'logout']);
