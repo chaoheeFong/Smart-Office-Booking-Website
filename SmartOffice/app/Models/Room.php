@@ -19,7 +19,6 @@ class Room extends Model
         'approve',
         'user_id'
     ];
-    protected $primaryKey = 'id';
 
 
     /**

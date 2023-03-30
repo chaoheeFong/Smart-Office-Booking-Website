@@ -11,16 +11,19 @@ use Illuminate\Http\v;
 use Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     public function adminReadList() {
-        //$bookingList = DB::table('bookings')->paginate(10);
+        
+        if(Gate::allows('isAdmin')){
         $roomsList = Room::where('approve', false)->get();
-        $countRoomList = Room::where('approve', false)->count();
+        $countRoomList = $roomsList->count();
         return view('Admin/admin', [
             'roomsDetails' => $roomsList,
             'countRoomList' => $countRoomList]);
+        }
     }
 
     

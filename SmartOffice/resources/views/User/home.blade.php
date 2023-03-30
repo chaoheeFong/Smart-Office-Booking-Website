@@ -51,7 +51,7 @@
           <div class="flex align-content-center">
             <h3>RM {{$roomBox->price}}</h3>
             <div class="mx-3 flex flex-column gap-1 justify-content-end w-6">
-              <button class="w-12"><a class="no-underline" href="">Book Now</a></button>
+              <button type="button" data-toggle="modal" data-target="#roomModal"><a class="no-underline" href="" >Book Now</a></button>
               <button><a class="no-underline" href="/room/{{$roomBox->id}}">More Details</a></button>
             </div>
             
@@ -61,6 +61,35 @@
   @endforeach
   </div>
 
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="recipient-name" class="col-form-label">Recipient:</label>
+              <input type="text" class="form-control" id="recipient-name">
+            </div>
+            <div class="form-group">
+              <label for="message-text" class="col-form-label">Message:</label>
+              <textarea class="form-control" id="message-text"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Send message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="col-md-10">
     <h2 class="p-2 text-white">
         Interested in joining us to rent your office? <br>

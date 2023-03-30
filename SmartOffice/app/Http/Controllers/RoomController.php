@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
-    public function roomslist() {
+    public function index() {
+        
         return view('User/home', [
             'roomslist' =>  RoomResource::collection(Room::where('approve', true)->get()),
             'dfrom' => 'From',
@@ -24,7 +25,13 @@ class RoomController extends Controller
         ]);
     }
 
-    
+    public function adminRoomList() {
+        $roomsList = Room::where('approve', false)->get();
+        return view('Admin/adminRoomList', [
+            'roomsDetails' => $roomsList,
+        ]);
+    }
+
     public function search(Request $request) {
         $dfrom = 'From';
         $dto = 'To';

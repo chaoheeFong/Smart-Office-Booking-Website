@@ -70,10 +70,11 @@
             </div>
         </div>
     </div>
+    
     <div class="row pt-3">
         <div class="col-2"></div>
-        <div class="col-2">
-            <button class="btn btn-md btn-warning text-dark" type="submit">bookingConfirmation</button>
+        <div class="col-2 input-group">
+            <button class="btn btn-md btn-warning text-dark" type="submit">Confirm Booking</button>
         </div>
     </div>          
   </form>

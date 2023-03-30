@@ -24,17 +24,17 @@ use App\Http\Controllers\UserController;
 Route::group(['middleware' => 'auth'], function () {
     
     //Admin route  
-    Route::get('/admin', [UserController::class, 'adminReadList']);
-    Route::get('/bookingList', function () {
-        return view('Admin/adminBookingList');
-    });
-    Route::get('/roomList', function () {
-        return view('Admin/adminRoomList');
-    });
+    Route::group(['middleware' => 'can:isAdmin'], function () {
+        Route::get('/admin', [UserController::class, 'adminReadList']);
+        Route::get('/bookingList', function () {
+            return view('Admin/adminBookingList');
+        });
+        Route::get('/roomList', [RoomController::class, 'adminRoomList']);
 
-    //admin action
-    Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
-    Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
+        //admin action
+        Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
+        Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
+    });
     //User route
     Route::get('/', function () {
         return redirect('/home');
@@ -46,7 +46,7 @@ Route::group(['middleware' => 'auth'], function () {
         return view('User/mybooking');
     });
 
-    Route::get('/home', [RoomController::class, 'roomslist']);
+    Route::get('/home', [RoomController::class, 'index']);
 
     Route::get('/search', [RoomController::class, 'search']);
 

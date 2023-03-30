@@ -16,10 +16,6 @@ class Booking extends Model
         'end_date',
         'booking_date',
         'booking_status',
-    ];
-
-    protected $hidden = [
-        'id',
         'room_id',
         'user_id',
     ];

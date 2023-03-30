@@ -1,26 +1,9 @@
-@php
-    $bookings = array("id"=>'1', 
-    'date'=>'20 January 2023', '
-    name'=>'Shawn Liu Han Sheng', 
-    'place'=>'Room 2',
-    'pax'=> '3',
-    );
-
-
-@endphp
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/sass/admin.scss')
-    @vite('resources/js/app.js')
-    <title>Admin Panel</title>
-</head>
-<body>
-    <x-header user="admin" />
-
+@extends('layouts.adminLayout')
+@section('title') Admin Panel @endsection
+<?php
+$bookings = ['','']
+?>
+@section('main_content')
     <div>
         <div class="grid">
             <div class ="col-6">
@@ -37,6 +20,7 @@
 
                     @foreach ($roomsDetails as $roomDetails)
                     <div class="p-card p-2 h-11rem w-full border-round">
+                        <x-admin-room-card roomDetails={{$roomDetails}}/>
                         <div class="flex flex-wrap">
                           <div class="p-card-title w-full">{{$roomDetails->name}}</div>
                           <div class="p-card-subtitle w-full">Location: {{$roomDetails->location}}</div>
@@ -51,7 +35,7 @@
                     </div>
                     @endforeach
                     <a href="" class="no-underline text-cyan-900">End Here...</a>
-                </div>
+                </div> 
                 </div>
             </div>
             <div class="col-6">
@@ -106,5 +90,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>

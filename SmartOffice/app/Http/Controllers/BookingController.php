@@ -21,6 +21,7 @@ class BookingController extends Controller
         //
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -136,7 +137,7 @@ class BookingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBookingRequest $request, Booking $booking)
+    public function update(Request $request, Booking $booking)
     {
         //
     }
