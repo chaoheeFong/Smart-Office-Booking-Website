@@ -1,7 +1,7 @@
 <div>
     <div class="p-card p-2 h-7rem w-full border-round">
       <div>
-        <div class="p-card-title">Title</div>
+        <div class="p-card-title">{{$roomDetails->name}}</div>
         <div class="p-card-subtitle">Subtitle</div>
       </div>
       <div class="flex flex-row gap-1 justify-content-end">
