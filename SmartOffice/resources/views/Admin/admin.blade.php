@@ -1,27 +1,9 @@
-@php
-    $bookings = array("id"=>'1', 
-    'date'=>'20 January 2023', '
-    name'=>'Shawn Liu Han Sheng', 
-    'place'=>'Room 2',
-    'pax'=> '3',
-    );
-
-
-@endphp
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/sass/admin.scss')
-    @vite('resources/js/app.js')
-    <script src="resources/js/app.js"></script>
-    <title>Admin Panel</title>
-</head>
-<body>
-    <x-header user="admin" />
-
+@extends('layouts.adminLayout')
+@section('title') Admin Panel @endsection
+<?php
+$bookings = ['','']
+?>
+@section('main_content')
     <div>
         <div class="grid">
             <div class ="col-6">
@@ -29,18 +11,31 @@
                 <h1>Latest Booking</h1>
                 <div class="h-20rem listBox">
                     @foreach ($bookings as $item)
-                        <x-admin-booking-card />
+                        <x-admin-booking-card booking={{$item}} />
                     @endforeach
-                    <a href="" class="no-underline text-cyan-900">Show More...</a>
+                    <a href="" class="no-underline text-cyan-900">End Here...</a>
                 </div>
                 <h1>Room Request</h1>
-                <div class="h-10rem listBox">
+                <div class="h-16rem listBox">
 
-                    @foreach ($bookings as $item)
-                        <x-admin-room-card isApproved=0/>
+                    @foreach ($roomsDetails as $roomDetails)
+                    <div class="p-card p-2 h-11rem w-full border-round">
+                        <x-admin-room-card roomDetails={{$roomDetails}}/>
+                        <div class="flex flex-wrap">
+                          <div class="p-card-title w-full">{{$roomDetails->name}}</div>
+                          <div class="p-card-subtitle w-full">Location: {{$roomDetails->location}}</div>
+                          <div class="p-card-subtitle w-6">Price: {{$roomDetails->price}}</div>
+                          <div class="p-card-subtitle w-6">Capacity: {{$roomDetails->capacity}}</div>
+                          <div class="p-card-subtitle">Description: {{$roomDetails->description}}</div>
+                        </div>
+                        <div class="flex flex-row gap-1 justify-content-end">
+                            <button class="p-button p-button-success p-1"><a class="text-white" href="{{ route('room.approve', $roomDetails->id) }}"><i class="pi pi-check p-1"></i></a></button>
+                            <button class="p-button p-button-danger p-button-success p-1" ><a class="text-white" href="{{ route('room.delete', $roomDetails->id) }}"><i class="pi pi-times p-1"></i></a></button>
+                        </div>  
+                    </div>
                     @endforeach
-                    <a href="" class="no-underline text-cyan-900">Show More...</a>
-                </div>
+                    <a href="" class="no-underline text-cyan-900">End Here...</a>
+                </div> 
                 </div>
             </div>
             <div class="col-6">
@@ -57,7 +52,7 @@
                         </div>
                         <div class="summuryBox bg-yellow-200">
                             <h2 class="pt-1 pl-3">Room Request</h2>
-                            <h2 class="absolute right-0 pr-3 top-50" >30</h2>
+                            <h2 class="absolute right-0 pr-3 top-50" >{{$countRoomList}}</h2>
                         </div>
                         <div class="summuryBox bg-red-200">
                             <h2 class="pt-1 pl-3">Total Sales</h2>
@@ -74,7 +69,7 @@
                         </a>
                     </button>
                     <button class="buttonStyle">
-                        <a href="" class="text-color">
+                        <a href="/apply" class="text-color">
                             <span class="pi pi-home">
                             <span class="font-bold">Add Room</span>
                         </a>
@@ -95,5 +90,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>
