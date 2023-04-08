@@ -42,9 +42,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/apply', [RoomController::class, 'create']);
     Route::post('/addRoom', [RoomController::class, 'store']);
-    Route::get('/mybooking', function () {
-        return view('User/mybooking');
-    });
+    Route::get('/mybooking', [BookingController::class, 'myBooking'])->name('User.mybooking');
+
+    //User action
+    Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('User.edit');
+    Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
     Route::get('/home', [RoomController::class, 'index']);
 

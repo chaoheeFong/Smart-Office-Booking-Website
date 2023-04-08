@@ -46,12 +46,12 @@
     <form  method="POST" class="bg-success pb-3" action="/bookingConfirmation">
     @csrf
     <input type="hidden" name="room_id" value="{{$room[0]['id']}}"/>
-     
+    <input type="hidden" name="booking_status" value="success"/> 
     <div class="row py-3">
         <div class="col-2"></div>
         <div class="col-3">
             <div class="input-group date" id="datepicker1">
-                <input autocomplete="off" type="text" class="form-control" id="date" placeholder="From" name="dfrom" id="dfrom" value="{{old('dfrom')}}"/>
+                <input autocomplete="off" type="text" class="form-control" id="date" placeholder="From" name="start_date" id="start_date" value="{{old('start_date')}}"/>
                 <span class="input-group-append">
                 <span class="input-group-text bg-light d-block" placeholder="to">
                     <i class="fa fa-calendar"></i>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-3">
             <div class="input-group date" id="datepicker2">
-                <input autocomplete="off" type="text" class="form-control" id="date"  placeholder="To" name="dto" id="dto"  value="{{old('dto')}}"/>
+                <input autocomplete="off" type="text" class="form-control" id="date"  placeholder="To" name="end_date" id="end_date"  value="{{old('end_date')}}"/>
                 <span class="input-group-append">
                 <span class="input-group-text bg-light d-block">
                     <i class="fa fa-calendar"></i>
