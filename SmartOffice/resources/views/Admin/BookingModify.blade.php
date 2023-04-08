@@ -5,6 +5,11 @@
 @section('main_content')
 
 <section class="container  bg-light">
+    <div class="row pt-3">
+        <div class="col-12 text-center">
+            <h2 class="text-success">Please Update your Booking Date Below!</h2>
+        </div>
+    </div>
     <div class="row featurette py-3">
         <div class="col-md-7 order-md-2">
           <h2 class="featurette-heading">{{$room[0]['name']}}</span></h2>
@@ -25,11 +30,7 @@
       </div>
 </section>
 <section class="container py-5 bg-light" id="bookingform">
-    <div class="row pt-3">
-        <div class="col-12 text-center">
-            <h2 class="text-success">Please Update your Booking Date Below!</h2>
-        </div>
-    </div>
+
     @if ($errors->any())
     <div class="row py-3">
         <div class="col-12">
