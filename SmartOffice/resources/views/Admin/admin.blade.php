@@ -90,3 +90,4 @@ $bookings = ['','']
             </div>
         </div>
     </div>
+@endsection

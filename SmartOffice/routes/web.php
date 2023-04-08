@@ -34,6 +34,10 @@ Route::group(['middleware' => 'auth'], function () {
         //admin action
         Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
         Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
+        Route::get('/ModifyRoom/{id}', [RoomController::class, 'editRoom'])->name('room.edit');
+        Route::post('/updateRoom', [RoomController::class, 'store']);
+        Route::get('/ModifyBooking/{id}', [BookingController::class, 'editBooking'])->name('booking.edit');
+        Route::post('/updateBooking', [RoomController::class, 'store']);
     });
     //User route
     Route::get('/', function () {
@@ -67,5 +71,3 @@ Route::group(['middleware' => ['prevent-history', 'guest']], function(){
     Auth::routes();
 });
 Route::get('logout', [LoginController::class,'logout']);
-
-

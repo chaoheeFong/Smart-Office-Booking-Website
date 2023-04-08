@@ -176,6 +176,9 @@ class RoomController extends Controller
     public function update(UpdateRoomRequest $request, Room $room)
     {
         //
+        $room = Room::find($id);
+        $room->save();
+        return redirect()->back();
     }
 
     /**
