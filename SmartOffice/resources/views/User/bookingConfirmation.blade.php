@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.userLayout')
 
 @section('title') Thank you for booking @endsection
 

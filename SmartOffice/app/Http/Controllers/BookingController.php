@@ -33,9 +33,8 @@ class BookingController extends Controller
     public function bookingConfirmation(Request $request) {
         $rules = [
             'room_id' => 'required|Numeric',
-            'user_id' => 'required|Numeric',
-            'dfrom' => 'required|min:2|max:100',
-            'dto' => 'required|min:2|max:100',
+            'start_date' => 'required|min:2|max:100',
+            'end_date' => 'required|min:2|max:100',
         ];
 
         $validate =  Validator::make($request->all(), $rules, []);
@@ -46,8 +45,8 @@ class BookingController extends Controller
 
 
         if (
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
+            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('start_date'), $m1) &&
+            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('end_date'), $m2)
         ) {
             $y = $m1[3];
             $m = $m1[1];
@@ -58,64 +57,50 @@ class BookingController extends Controller
             $d = $m2[2];
             $sdto = "$y-$m-$d";
 
-            $sroom = Booking::where('room_id', $request->get('room_id'))->where(
-                function ($query) use ($sdfrom, $sdto) {
+            // Check if the room is already booked for the selected dates
+            $isRoomBooked = Booking::where('room_id', $request->get('room_id'))
+            ->where(function ($query) use ($sdfrom, $sdto) {
+            $query
+                ->whereBetween('start_date', [$sdfrom, $sdto])
+                ->orWhereBetween('end_date', [$sdfrom, $sdto])
+                ->orWhere(function ($query) use ($sdfrom, $sdto) {
                     $query
-                        ->orwhere(
-                            function ($query) use ($sdfrom, $sdto) {
-                                $query
-                                    ->where('dto', '>=', $sdfrom)
-                                    ->where('dto', '<=',  $sdto);
-                            }
-                        )
-                        ->orwhere(
-                            function ($query) use ($sdfrom, $sdto) {
-                                $query
-                                    ->where('dfrom', '>=', $sdfrom)
-                                    ->where('dfrom', '<=',  $sdto);
-                            }
-                        );
-                }
-            );
-            // dd($sroom);
-            // $query = str_replace(array('?'), array('%s'), $sroom->toSql());
-            // $query = vsprintf($query, $sroom->getBindings());
-            // // dd($query);
-            // dd($sroom->get()->count());
+                        ->where('start_date', '<', $sdfrom)
+                        ->where('end_date', '>', $sdto);
+                });
+        })
+        ->exists();
 
-
-            $date1 = Carbon::createFromFormat('Y-m-d', $sdfrom);
-            $date2 = Carbon::createFromFormat('Y-m-d', $sdto);
-
-
-            if ($sroom->get()->count() > 0) {
-                $error = \Illuminate\Validation\ValidationException::withMessages([
-                    'not availeble' => ['This room has been booked for the dates you have selected'],
-                ]);
-                throw $error;
-            } elseif ($date1->gt($date2)) {
-                $error = \Illuminate\Validation\ValidationException::withMessages([
-                    'date error' => ['Date TO is less than date FROM'],
-                ]);
-                throw $error;
-            }
+        if ($isRoomBooked) {
+            $error = \Illuminate\Validation\ValidationException::withMessages(['not available' => ['This room has been booked for the dates you have selected'],]);
+            throw $error;
+        } elseif ($sdfrom >= $sdto) {
+            $error = \Illuminate\Validation\ValidationException::withMessages(['date error' => ['Date TO is less than or equal to date FROM'],]);
+            throw $error;
+        }   
         } else {
-            $error = \Illuminate\Validation\ValidationException::withMessages([
-                'dates' => ['Dates From or To not set'],
-            ]);
+            $error = \Illuminate\Validation\ValidationException::withMessages(['dates' => ['Dates From or To not set'],]);
+            throw $error;
         }
+
 
 
 
         $bookingConfirmation = new Booking();
 
         $bookingConfirmation->room_id = $request->input('room_id');
-        $bookingConfirmation->user_id = $request->input('user_id');
-        $bookingConfirmation->dfrom = $sdfrom;
-        $bookingConfirmation->dto = $sdto;
+        $bookingConfirmation->user_id = auth()->user()->id;
+        $bookingConfirmation->booking_status = $request->input('booking_status');
+        $bookingConfirmation->start_date = $sdfrom;
+        $bookingConfirmation->end_date = $sdto;
 
         $bookingConfirmation->save();
-        return view('bookingConfirmation', []);
+        return view('User/bookingConfirmation', []);
+    }
+
+    public function myBooking(){
+        $bookings = Booking::all();
+        return view('User.myBooking', compact('bookings'));
     }
 
     /**
@@ -123,7 +108,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
+        return view('User.show', compact('booking'));
     }
 
     /**
@@ -131,7 +116,8 @@ class BookingController extends Controller
      */
     public function edit(Booking $booking)
     {
-        //
+        $booking = Booking::findOrFail($booking->id);
+        return view('User.edit', compact('booking'));
     }
 
     /**
@@ -139,7 +125,12 @@ class BookingController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
-        //
+        $booking = Booking::findOrFail($booking->id);
+        $booking->start_date = $request->input('start_date');
+        $booking->end_date = $request->input('end_date');
+        $booking->save();
+
+        return redirect()->route('User.mybooking')->with('success', 'Booking updated successfully');
     }
 
     /**
@@ -147,6 +138,9 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        //
+        $booking = Booking::findOrFail($booking->id);
+        $booking->delete();
+
+        return redirect()->route('User.mybooking')->with('success', 'Booking deleted successfully');
     }
 }
