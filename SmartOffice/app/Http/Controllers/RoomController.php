@@ -8,33 +8,42 @@ use App\Http\Requests\UpdateRoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use App\Http\Controllers\RoomImagesController;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        $roomList = $request->exists(['dto', 'dfrom', 'location'])? $this->search($request) : RoomResource::collection(Room::where('approve', true)->get());
         
         return view('User/home', [
-            'roomslist' =>  RoomResource::collection(Room::where('approve', true)->get()),
+            'roomslist' =>  $roomList,
+            'location' => $request->location,
             'dfrom' => 'From',
             'dto' => 'To',
         ]);
     }
 
-    public function adminRoomList() {
-        $roomsList = Room::where('approve', false)->get();
-        return view('Admin/adminRoomList', [
-            'roomsDetails' => $roomsList,
+    public function show() {
+        
+        $roomsList = Auth::user()->role == UserRoleEnum::Admin ? RoomResource::collection(Room::where('approve', true)->get()) : RoomResource::collection(Room::where('approve', true)->Where('user_id', Auth::user()->id)->get());
+        return view('User/ownedRoom', [
+            'roomsList' =>  $roomsList,
         ]);
     }
 
+   
+
     public function search(Request $request) {
+        
         $dfrom = 'From';
         $dto = 'To';
+        $location = $request->string('location');
         if (
             preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
             preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
@@ -54,7 +63,10 @@ class RoomController extends Controller
                     function ($query) use ($sdfrom, $sdto) {
                         $query->where('bookings.dto', '<', "'$sdto'")->where('bookings.dfrom', '>', "'$sdfrom'");
                     }
-                )->paginate(6);
+                )
+            ->when($location, function (Builder $query, string $location){
+                $query->where('location', $location);
+            })->get();
 
             // $query = str_replace(array('?'), array('%s'), $sroom->toSql());
             // $query = vsprintf($query, $sroom->getBindings());
@@ -74,7 +86,10 @@ class RoomController extends Controller
                     function ($query) use ($sdfrom) {
                         $query->where('bookings.dfrom', '>', "'$sdfrom'");
                     }
-                )->paginate(6);
+                )
+            ->when($location, function (Builder $query, string $location){
+                $query->where('location', $location);
+            })->get();
         } elseif (
             !preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
             preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
@@ -89,16 +104,21 @@ class RoomController extends Controller
                     function ($query) use ($sdto) {
                         $query->where('bookings.dto', '<', "'$sdto'");
                     }
-                )->paginate(6);
+                )
+            ->when($location, function (Builder $query, string $location){
+                $query->where('location', $location);
+            })->get();
         } else {
-            $sroom = Room::with("bookings")->paginate(6);
+            $sroom = DB::table('rooms')->where('approve', true)
+            ->when($location, function (Builder $query, string $location){
+                $query->where('location', $location);
+            })
+            ->get();
         }
 
-        return view('User/home', [
-            'roomslist' =>  $sroom, // RoomResource::collection($sroom),
-            'dfrom' => $dfrom,
-            'dto' => $dto,
-        ]);
+        
+
+        return $sroom;
     }
 
     public function oneroom($id, Request $request) {
@@ -118,7 +138,8 @@ class RoomController extends Controller
      */
     public function create()
     {
-        return view('User/apply');//
+        $user = Auth::user()->role;
+        return view('User/apply', ['user'=>$user]);//
     }
 
     /**
@@ -165,20 +186,27 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Room $room)
+    public function edit($id)
     {
-        //
+        $room = Room::find($id);
+        return view('User/editRoom',['room'=> $room]);//
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoomRequest $request, Room $room)
+    public function update(Request $request)
     {
         //
-        $room = Room::find($id);
+        $room = Room::find($request->id);
+        $room->name = $request->name;
+        $room->location = $request->location;
+        $room->description = $request->description;
+        $room->price = $request->price;
+        $room->capacity = $request->capacity;
+
         $room->save();
-        return redirect()->back();
+        return redirect('/viewOwnedRoom');
     }
 
     /**
@@ -198,8 +226,9 @@ class RoomController extends Controller
     }
 
     public function deleteRoom($id) {
+        
         Room::where('id', $id)->delete();
-
+        
         return redirect()->back();
     }
 }

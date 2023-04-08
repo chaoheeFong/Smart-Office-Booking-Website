@@ -7,22 +7,22 @@ $bookings = ['','']
     <div>
         <a href="/apply" class="pointer-cursor no-underline absolute right-0 mr-6 mt-2 text-xl text-color hover:text-teal-500">+ Add Room</a>
         <div>
-            <h1>Available Room</h1>
+            <h2>Available Room</h2>
             <div class="fullListBox">
                 
             </div>
         </div>
         <div>
-            <h1>Unavailable Room</h1>
+            <h2>Unavailable Room</h2>
             <div class="fullListBox">
                
             </div>
         </div>
         <div>
-            <h1>Room Request</h1>
+            <h2>Room Request</h2>
             <div class="fullListBox">
                 @foreach($roomsDetails as $roomDetails)
-                <div class="p-card p-2 h-11rem w-full border-round">
+                <div class="p-card p-2 h-12rem w-full border-round">
                     <div class="flex flex-wrap">
                       <div class="p-card-title w-full">{{$roomDetails->name}}</div>
                       <div class="p-card-subtitle w-full">Location: {{$roomDetails->location}}</div>

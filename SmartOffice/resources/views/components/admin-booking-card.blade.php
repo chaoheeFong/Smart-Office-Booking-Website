@@ -2,7 +2,7 @@
     $isApproved = true;
 @endphp
 <div>
-    <div class="p-card p-2 h-7rem w-full">
+    <div class="p-card p-2 h-8rem w-full">
         <div>
             <div class="p-card-title">Title</div>
             <div class="p-card-subtitle">Subtitle</div>

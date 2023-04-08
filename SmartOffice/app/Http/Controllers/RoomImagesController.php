@@ -10,12 +10,15 @@ class RoomImagesController extends Controller
     //Store image
     public function storeImage(Request $request,int $roomId){
         
-        if($request->file('image')){
+        if($request->image != null){
+            $request->validate([
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
             $file= $request->file('image');
-            $filename= date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('public/Images'), $filename);
+            $imageName = time().'.'.$request->image->extension();  
+            $file-> move(public_path('public/Images'), $imageName);
             return RoomImages::create([
-                'filename' => $filename,
+                'filename' => $imageName,
                 'room_id' => $roomId,
             ]);
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enum\UserRoleEnum;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 
-                if(Auth::user()->role == 'admin') {
+                if(Auth::user()->role == UserRoleEnum::Admin) {
                     return redirect('/admin');
                 }
                 else{

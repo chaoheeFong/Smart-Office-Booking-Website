@@ -5,12 +5,19 @@
 // Variables
 @import 'standard';
 
+h2{
+    @include styleclass('text-white');
+}
+
+label{
+    @include styleclass('text-white');
+}
 .summuryBox {
-    @include styleclass('w-5 h-7rem shadow-5 border-round relative m-3');
+    @include styleclass('w-5 h-7rem shadow-7 border-round relative m-3');
 }
 
 .buttonStyle {
-    @include styleclass('col-5 m-2 p-4 text-3xl cursor-pointer');
+    @include styleclass('col-5 m-2 p-4 text-3xl cursor-pointer border-round shadow-7');
     a{
         span{
             @include styleclass('text-3xl');

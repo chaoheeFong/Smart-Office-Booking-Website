@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,12 +26,11 @@ Route::group(['middleware' => 'auth'], function () {
     
     //Admin route  
     Route::group(['middleware' => 'can:isAdmin'], function () {
-        Route::get('/admin', [UserController::class, 'adminReadList']);
+        Route::get('/admin', [AdminController::class, 'adminHome']);
         Route::get('/bookingList', function () {
             return view('Admin/adminBookingList');
         });
-        Route::get('/roomList', [RoomController::class, 'adminRoomList']);
-
+        Route::get('/roomList', [AdminController::class, 'adminRoomList']);
         //admin action
         Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
         Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
@@ -38,13 +38,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/updateRoom', [RoomController::class, 'store']);
         Route::get('/ModifyBooking/{id}', [BookingController::class, 'editBooking'])->name('booking.edit');
         Route::post('/updateBooking', [RoomController::class, 'store']);
+        Route::get('/addBooking', [AdminController::class, 'adminCreateBooking'])->name('admin.addBooking');
     });
-    //User route
+
+//User route
     Route::get('/', function () {
         return redirect('/home');
     });
-
     Route::get('/apply', [RoomController::class, 'create']);
+    Route::get('/viewOwnedRoom', [RoomController::class, 'show'])->name('rooms.show');
     Route::post('/addRoom', [RoomController::class, 'store']);
     Route::get('/mybooking', [BookingController::class, 'myBooking'])->name('User.mybooking');
 
@@ -53,12 +55,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
-    Route::get('/home', [RoomController::class, 'index']);
 
     Route::get('/search', [RoomController::class, 'search']);
 
+    Route::get('/home', [RoomController::class, 'index']);
     Route::get('/room/{id}',  [RoomController::class, 'oneroom']);
-
+    Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
+    Route::get('/editRoom/{id}', [RoomController::class, 'edit'])->name('room.edit');
+    Route::post('/editRoom', [RoomController::class, 'update']); 
+    Route::get('/mybooking', function () {
+        return view('User/mybooking');
+    });
     Route::post('/bookingConfirmation',  [BookingController::class, 'bookingConfirmation']);
 
     
@@ -67,10 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['middleware' => ['prevent-history', 'guest']], function(){
     Route::get('/login', [LoginController::class,'showLoginForm'])->name('login');
-    Route::get('/register/user', [RegisterController::class,'showUserRegisterForm'])->name('register');
-    Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
     Route::post('/login', [LoginController::class,'userLogin']);
-    Route::post('/register', [RegisterController::class,'registerUser']);
-    Auth::routes();
 });
+
+Route::get('/register', [RegisterController::class,'showRegisterForm']);
+Route::post('/register', [RegisterController::class,'registerUser']);
 Route::get('logout', [LoginController::class,'logout']);
+Auth::routes();
+

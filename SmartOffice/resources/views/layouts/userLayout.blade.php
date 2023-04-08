@@ -18,6 +18,7 @@
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-white" href="/home">Home</a>
             <a class="p-2 text-white" href="/mybooking">My Booking</a>
+            <a class="p-2 text-white" href="/viewOwnedRoom">My Room</a>
             <a class="p-2 text-white" href="/logout">Log Out</a>
         </nav>
     </div>
@@ -31,8 +32,12 @@
 
     <script id="rendered-js" >
         $(function () {
-          $('#datepicker1').datepicker();
-          $('#datepicker2').datepicker();
+          $('#datepicker1').datepicker({
+            format: 'yyyy-mm-dd'
+          });
+          $('#datepicker2').datepicker({
+            format: 'yyyy-mm-dd'
+          });
         });
     </script>
 </body>

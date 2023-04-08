@@ -1,4 +1,6 @@
-@extends('layouts.userLayout')
+@extends(Auth::user()->role == App\Enum\UserRoleEnum::Admin ? 'layouts.adminLayout' : 'layouts.userLayout')
+
+
 @section('main_content')
 <div class="container">
 <div>
