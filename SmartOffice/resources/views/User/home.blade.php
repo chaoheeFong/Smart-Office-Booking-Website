@@ -3,10 +3,10 @@
 
 @section('main_content')
 <div class="container">
-  <form class="container-fluid border-bottom rounded-bottom rounded-5 shadow-lg" style="border-color: gray!important" method="GET" action="/home">
+  <form id="filter" class="container-fluid border-bottom rounded-bottom rounded-5 shadow-lg" style="border-color: gray!important" method="GET" action="/home">
       <div class="col-10">
           <div class="input-group date" id="datepicker1">
-            <input autocomplete="off" type="text" class="form-control" id="dfrom" placeholder="Start Date" name="dfrom" value="{{old('dfrom')}}"/>
+            <input autocomplete="off" type="text" class="form-control" id="dfrom" placeholder="Start Date" name="dfrom" value="{{$dfrom}}"/>
             <span class="input-group-append">
               <span class="input-group-text bg-light d-block" placeholder="to">
                 <i class="fa fa-calendar"></i>
@@ -16,7 +16,7 @@
       </div>
       <div class="col-10">
           <div class="input-group date" id="datepicker2">
-            <input autocomplete="off" type="text" class="form-control" id="dto"  placeholder="End Date" name="dto"  value="{{old('dto')}}"/>
+            <input autocomplete="off" type="text" class="form-control" id="dto"  placeholder="End Date" name="dto"  value="{{$dto}}"/>
             <span class="input-group-append">
               <span class="input-group-text bg-light d-block">
                 <i class="fa fa-calendar"></i>
@@ -26,6 +26,7 @@
       </div>
       <div class="col-10">
           <select class="form-control" placeholder="Location" name="location" id="location" onload="changeDefault()">
+            <option value="">Show All</option>
               <option>Kuala Lumpur</option>
               <option>Cheras</option>
               <option>Kajang</option>
@@ -46,9 +47,34 @@
       </div>
       <div class="col-10">
           <button class="btn btn-md btn-warning text-white" type="submit">Search</button>
+          <button class="btn btn-md btn-danger text-white" id="reset">Reset</button>
+          <script>
+            var reset = document.getElementById('reset');
+            reset.addEventListener('click', function(){
+              document.getElementById('dfrom').value = "";
+              document.getElementById('dto').value = "";
+              document.getElementById('location').value = "";
+              document.getElementById('filter').submit();
+            });
+          </script>
       </div>
   </form>
   <br>
+
+  @if ($errors->any())
+    <div class="row py-3">
+        <div class="col-12">
+            <div class="alert alert-danger pt-3 pb-1  mt-3 mp-2">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+
 
   <div class="flex flex-wrap">
   @foreach ($roomslist as $roomBox)
@@ -60,14 +86,10 @@
           <p>Location: {{$roomBox->location}}</p>
           <p>Size: {{$roomBox->capacity}}</p>
           <p>Description: {{$roomBox->description}}</p>
-          <div class="flex align-content-center">
-            <h3>RM {{$roomBox->price}}/Day</h3>
-            <div class="mx-3 flex flex-column gap-1 justify-content-end w-6">
-              <button type="button" data-toggle="modal" data-target="#roomModal"><a class="no-underline" href="" >Book Now</a></button>
-              <button><a class="no-underline" href="/room/{{$roomBox->id}}">More Details</a></button>
-            </div>
-            
-          </div>
+          <h3>RM {{$roomBox->price}}/Day</h3>
+          <button class="w-full h-3rem h5"><a class="no-underline" href="/room/{{$roomBox->id}}">More Details</a></button>
+
+        
         </div>
       </div>
   @endforeach

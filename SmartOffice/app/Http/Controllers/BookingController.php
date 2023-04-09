@@ -47,18 +47,9 @@ class BookingController extends Controller
         }
 
 
-        if (
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('start_date'), $m1) &&
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('end_date'), $m2)
-        ) {
-            $y = $m1[3];
-            $m = $m1[1];
-            $d = $m1[2];
-            $sdfrom = "$y-$m-$d";
-            $y = $m2[3];
-            $m = $m2[1];
-            $d = $m2[2];
-            $sdto = "$y-$m-$d";
+        if ($request->has(['start_date', 'end_date'])) {
+            $sdfrom = $request->input('start_date');
+            $sdto = $request->input('end_date');
 
             // Check if the room is already booked for the selected dates
             $isRoomBooked = Booking::where('room_id', $request->get('room_id'))

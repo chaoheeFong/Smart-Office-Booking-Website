@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateRoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use App\Http\Controllers\RoomImagesController;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,13 +19,12 @@ use Illuminate\Support\Facades\Gate;
 class RoomController extends Controller
 {
     public function index(Request $request) {
-        $roomList = $request->exists(['dto', 'dfrom', 'location'])? $this->search($request) : RoomResource::collection(Room::where('approve', true)->get());
-        
+        $roomList = empty($request->input('dto')) && empty($request->input('dfrom')) && empty($request->input('location')) ? RoomResource::collection(Room::where('approve', true)->get()) : $this->search($request);
         return view('User/home', [
             'roomslist' =>  $roomList,
             'location' => $request->location,
-            'dfrom' => 'From',
-            'dto' => 'To',
+            'dfrom' => $request->dfrom,
+            'dto' => $request->dto,
         ]);
     }
 
@@ -40,80 +39,67 @@ class RoomController extends Controller
    
 
     public function search(Request $request) {
-        
-        $dfrom = 'From';
-        $dto = 'To';
-        $location = $request->string('location');
-        if (
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
-        ) {
-            $dfrom =  $request->get('dfrom');
-            $dto =  $request->get('dto');
-            $y = $m1[3];
-            $m = $m1[1];
-            $d = $m1[2];
-            $sdfrom = "$y-$m-$d";
-            $y = $m2[3];
-            $m = $m2[1];
-            $d = $m2[2];
-            $sdto = "$y-$m-$d";
-            $sroom = Room::distinct()->select('rooms.id', 'rooms.name', 'photo', 'price')->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.dfrom')
-                ->orwhere(
-                    function ($query) use ($sdfrom, $sdto) {
-                        $query->where('bookings.dto', '<', "'$sdto'")->where('bookings.dfrom', '>', "'$sdfrom'");
-                    }
-                )
-            ->when($location, function (Builder $query, string $location){
-                $query->where('location', $location);
-            })->get();
 
-            // $query = str_replace(array('?'), array('%s'), $sroom->toSql());
-            // $query = vsprintf($query, $sroom->getBindings());
-            // dd($query);
-            // dd($sroom->count());
-        } elseif (
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
-            !preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
-        ) {
-            $dfrom =  $request->get('dfrom');
-            $y = $m1[3];
-            $m = $m1[1];
-            $d = $m1[2];
-            $sdfrom = "$y-$m-$d";
-            $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.dfrom')
-                ->orwhere(
-                    function ($query) use ($sdfrom) {
-                        $query->where('bookings.dfrom', '>', "'$sdfrom'");
+        $sdfrom =  $request->get('dfrom');
+        $sdto =  $request->get('dto');
+        $location = $request->string('location');
+        if (!empty($request->input('dfrom')) && !empty($request->input('dto'))) {
+            
+            $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')
+            ->whereNull('bookings.start_date')->where('approve', true)
+            ->orwhere(
+                    function ($query) use ($sdfrom, $sdto) {
+                        $query->where('bookings.start_date', '<' ,$sdfrom)->whereNot('bookings.end_date', '>=' ,$sdfrom)
+                        ->where('bookings.start_date', '<' ,$sdto)->whereNot('bookings.end_date', '>=' ,$sdto);
                     }
                 )
+                ->when($location, function (Builder $query, string $location){
+                    if(!empty($location)) {
+                        $query->where('rooms.location', $location);
+                    }
+                })
+            ->select('rooms.id AS id', 'rooms.name AS name', 'rooms.location AS location', 'rooms.price AS price', 'rooms.capacity AS capacity', 'rooms.description AS description')
+            ->get();
+
+        } elseif (!empty($request->input('dfrom')) && empty($request->input('dto'))) {
+            
+            $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.start_date')->where('approve', true)
+            ->orwhere(
+                function ($query) use ($sdfrom) {
+                    $query->where('bookings.start_date', '<' ,$sdfrom)->whereNot('bookings.end_date', '>=' ,$sdfrom);
+                }
+                )
             ->when($location, function (Builder $query, string $location){
-                $query->where('location', $location);
-            })->get();
-        } elseif (
-            !preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dfrom'), $m1) &&
-            preg_match("/(\d+)\/(\d+)\/(\d+)/", $request->get('dto'), $m2)
-        ) {
-            $dto =  $request->get('dto');
-            $y = $m2[3];
-            $m = $m2[1];
-            $d = $m2[2];
-            $sdto = "$y-$m-$d";
-            $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.dfrom')
+                if(!empty($location)) {
+                    $query->where('rooms.location', $location);
+                }
+            })
+            ->select('rooms.id AS id', 'rooms.name AS name', 'rooms.location AS location', 'rooms.price AS price', 'rooms.capacity AS capacity', 'rooms.description AS description')
+            ->get();
+
+        } elseif (empty($request->input('dfrom')) && !empty($request->input('dto'))) {
+
+            $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.start_date')->where('approve', true)
                 ->orwhere(
                     function ($query) use ($sdto) {
-                        $query->where('bookings.dto', '<', "'$sdto'");
+                        $query->where('bookings.start_date', '<' ,$sdto)->whereNot('bookings.end_date', '>=' ,$sdto);
                     }
                 )
             ->when($location, function (Builder $query, string $location){
-                $query->where('location', $location);
-            })->get();
+                if(!empty($location)) {
+                    $query->where('rooms.location', $location);
+                }
+            })
+            ->select('rooms.id AS id', 'rooms.name AS name', 'rooms.location AS location', 'rooms.price AS price', 'rooms.capacity AS capacity', 'rooms.description AS description')
+            ->get();
+
         } else {
             $sroom = DB::table('rooms')->where('approve', true)
             ->when($location, function (Builder $query, string $location){
                 $query->where('location', $location);
             })
             ->get();
+
         }
 
         
