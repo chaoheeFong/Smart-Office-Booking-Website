@@ -88,6 +88,8 @@ class BookingController extends Controller
         $bookingConfirmation->start_date = $sdfrom;
         $bookingConfirmation->end_date = $sdto;
         $bookingConfirmation->booking_date = Carbon::now()->format('y-m-d H:i:s');
+        $bookingConfirmation->total_price = $totalRoomPrice;
+
         $bookingConfirmation->save();
         
         return view('User/bookingConfirmation', ['bookingConfirmation' => $bookingConfirmation, 'countDays' => $countDays, 'totalRoomPrice' => $totalRoomPrice]);
@@ -164,8 +166,14 @@ class BookingController extends Controller
             $error = \Illuminate\Validation\ValidationException::withMessages(['dates' => ['Dates From or To not set'],]);
             throw $error;
         }
+
+        $countDays = Carbon::parse($sdfrom)->diffInDays(Carbon::parse($sdto));
+        $roomPrice = Room::where('id', $booking->room_id)->sum('price');
+        $totalRoomPrice = $countDays * $roomPrice;
+        
         $booking->start_date = $sdfrom;
         $booking->end_date = $sdto;
+        $booking->total_price = $totalRoomPrice;
         $booking->save();
 
         return redirect()->to('/mybooking')->with('success', 'Booking updated successfully');

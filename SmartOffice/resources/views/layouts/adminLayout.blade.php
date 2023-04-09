@@ -19,6 +19,7 @@
         <h1 class="my-0 mr-md-auto font-weight-normal text-white">SMART OFFICE BOOKING</h1>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-white font-medium text-xl hover:text-blue-300" href="/admin">Home</a>
+            <a class="p-2 text-white font-medium text-xl hover:text-blue-300" href="/viewOwnedRoom">Room</a>
             <a class="p-2 text-white font-medium text-xl hover:text-blue-300" href="/logout">Log Out</a>
         </nav>
     </div>

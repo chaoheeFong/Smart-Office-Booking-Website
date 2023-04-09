@@ -9,15 +9,48 @@ $bookings = ['','']
         <div>
             <h2>Available Room</h2>
             <div class="fullListBox">
-                
+                @foreach($availableRoomsDetails as $roomDetails)
+                <div class="p-card p-2 h-12rem w-full border-round">
+                    <div class="flex flex-wrap">
+                      <div class="p-card-title w-full">{{$roomDetails->name}}</div>
+                      <div class="p-card-subtitle w-full">Location: {{$roomDetails->location}}</div>
+                      <div class="p-card-subtitle w-6">Price: {{$roomDetails->price}}</div>
+                      <div class="p-card-subtitle w-6">Capacity: {{$roomDetails->capacity}}</div>
+                      <div class="p-card-subtitle">Description: {{$roomDetails->description}}</div>
+                    </div>
+                    <div class="flex flex-row gap-1 justify-content-end">
+                        <button class="p-button p-1"><i class="pi pi-book p-1"></i></button>
+                        <button class="p-button p-button-success p-1"><i class="pi pi-pencil p-1"></i></button>
+                        <button class="p-button p-button-danger p-button-success p-1" ><i class="pi pi-trash p-1"></i></button>
+                    </div>  
+                </div>
+                @endforeach
             </div>
         </div>
+        <br>
+        <br>
         <div>
             <h2>Unavailable Room</h2>
             <div class="fullListBox">
-               
+                @foreach($unavailableRoomsDetails as $roomDetails)
+                <div class="p-card p-2 h-12rem w-full border-round">
+                    <div class="flex flex-wrap">
+                      <div class="p-card-title w-full">{{$roomDetails->name}}</div>
+                      <div class="p-card-subtitle w-full">Location: {{$roomDetails->location}}</div>
+                      <div class="p-card-subtitle w-6">Price: {{$roomDetails->price}}</div>
+                      <div class="p-card-subtitle w-6">Capacity: {{$roomDetails->capacity}}</div>
+                      <div class="p-card-subtitle">Description: {{$roomDetails->description}}</div>
+                    </div>
+                    <div class="flex flex-row gap-1 justify-content-end">
+                        <button class="p-button p-1"><i class="pi pi-book p-1"></i></button>
+                        <button class="p-button p-button-success p-1"><i class="pi pi-pencil p-1"></i></button>
+                        <button class="p-button p-button-danger p-button-success p-1" ><i class="pi pi-trash p-1"></i></button>
+                    </div>  
+                </div>
+                @endforeach
             </div>
         </div>
+        <br><br>
         <div>
             <h2>Room Request</h2>
             <div class="fullListBox">

@@ -1,4 +1,4 @@
-@extends('layouts.userLayout')
+@extends(Auth::user()->role == App\Enum\UserRoleEnum::Admin ? 'layouts.adminLayout' : 'layouts.userLayout')
 
 @section('title') Thank you for booking @endsection
 

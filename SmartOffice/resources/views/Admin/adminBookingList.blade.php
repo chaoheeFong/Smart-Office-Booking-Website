@@ -19,6 +19,7 @@ $bookings = ['','']
                 <x-admin-booking-card />
             </div>
         </div>
+        <br><br>
         <div> 
             <h2>Completed Booking</h2>
             <div class="fullListBox">
@@ -29,6 +30,7 @@ $bookings = ['','']
                 <x-admin-booking-card />
             </div>
         </div>
+        <br><br>
         <div>
             <h2>Cancelled Booking</h2>
             <div class="fullListBox">

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->datetime('end_date')->nullable();
             $table->datetime('booking_date')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->integer('total_price');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
