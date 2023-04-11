@@ -23,7 +23,7 @@ class RoomImagesController extends Controller
             $imageName = time().'.'.$request->image->extension();  
             $file-> move(public_path('Images'), $imageName);
             return RoomImages::create([
-                'url' => $imageName,
+                'filename' => $imageName,
                 'room_id' => $roomId,
             ]);
         
@@ -49,4 +49,5 @@ class RoomImagesController extends Controller
        
     
 	
+}
 }
