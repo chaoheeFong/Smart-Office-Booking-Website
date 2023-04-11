@@ -36,7 +36,7 @@ class Room extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function roomImages()
+    public function images()
     {
         return $this->hasMany(RoomImages::class);
     }
