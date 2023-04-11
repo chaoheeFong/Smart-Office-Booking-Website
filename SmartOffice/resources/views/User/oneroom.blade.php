@@ -18,7 +18,11 @@
           <p class="lead">{{$room[0]['description']}}</p>
         </div>
         <div class="col-md-5 order-md-1">
-          <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" src="{{$room[0]['photo']}}" data-holder-rendered="true" style="width: 500px; height: auto;">
+            @if ($room[0]->images()->count() > 0)
+                <img class="featurette-image img-fluid mx-auto" src="{{ asset('images/'.$room[0]->images[0]->filename) }}" alt="{{ $room[0]->name }}">
+            @else
+                <img class="featurette-image img-fluid mx-auto" src="{{ asset('images/placeholder.png') }}" alt="Placeholder Image">
+            @endif
         </div>
       </div>
 </section>

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Room;
 use App\Models\User;
+use App\Enum\UserRoleEnum;
 use Illuminate\Auth\Access\Response;
 
 class RoomPolicy
@@ -29,7 +30,7 @@ class RoomPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +54,7 @@ class RoomPolicy
      */
     public function restore(User $user, Room $room): bool
     {
-        //
+        return $user->role === UserRoleEnum::Admin;
     }
 
     /**
@@ -61,6 +62,6 @@ class RoomPolicy
      */
     public function forceDelete(User $user, Room $room): bool
     {
-        //
+        return $user->role === UserRoleEnum::Admin;
     }
 }

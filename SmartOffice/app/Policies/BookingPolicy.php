@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Booking;
 use App\Models\User;
+use App\Enum\UserRoleEnum;
 use Illuminate\Auth\Access\Response;
 
 class BookingPolicy
@@ -13,15 +14,18 @@ class BookingPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->role === UserRoleEnum::Admin;        
     }
 
     /**
      * Determine whether the user can view the model.
+     * 
+     * @param \App\Models\User
+     * 
      */
     public function view(User $user, Booking $booking): bool
     {
-        //
+        return $user->id === $booking->user_id;
     }
 
     /**
@@ -29,7 +33,7 @@ class BookingPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -37,7 +41,7 @@ class BookingPolicy
      */
     public function update(User $user, Booking $booking): bool
     {
-        //
+        return $user->id === $booking->user_id;
     }
 
     /**
@@ -45,7 +49,7 @@ class BookingPolicy
      */
     public function delete(User $user, Booking $booking): bool
     {
-        //
+        return $user->id === $booking->user_id;
     }
 
     /**
@@ -53,7 +57,7 @@ class BookingPolicy
      */
     public function restore(User $user, Booking $booking): bool
     {
-        //
+        return $user->role === UserRoleEnum::Admin;
     }
 
     /**
@@ -61,6 +65,6 @@ class BookingPolicy
      */
     public function forceDelete(User $user, Booking $booking): bool
     {
-        //
+        return $user->role === UserRoleEnum::Admin;
     }
 }

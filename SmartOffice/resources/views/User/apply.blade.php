@@ -7,7 +7,7 @@
     <h4 class="text-white">Please fill your information into the form below to apply:</h2>
 </div>
 
-<form action="/addRoom" class="row" method="post">
+<form action="/addRoom" class="row" method="post" enctype="multipart/form-data">
     @csrf
     <div class="col-10">
         <input name="name" class="form-control" type="text" placeholder="Name">

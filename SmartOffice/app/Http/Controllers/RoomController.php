@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
+use App\Models\RoomImages;
 use App\Http\Controllers\RoomImagesController;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -115,7 +116,7 @@ class RoomController extends Controller
         else $name = '';
 
         return view('User/oneroom', [
-            'room' =>  RoomResource::collection(Room::where('id', $id)->get()),
+            'room' =>  Room::with('images')->where('id', $id)->get(),
             'name' => $name
         ]);
     }
@@ -155,9 +156,11 @@ class RoomController extends Controller
             'user_id' => Auth::id(),
             'approve' => $approve
        ]);
-       $newEntry = Room::orderBy('created_at', 'desc')->first();
        
-       (new RoomImagesController)->storeImage($request, $newEntry->id);
+       $roomId = Room::orderBy('created_at', 'desc')->first()->id;
+       (new RoomImagesController)->storeImage($request, $roomId);
+   
+       
        //
        if(Auth::user()->role == UserRoleEnum::User) {
             return redirect('/home');
