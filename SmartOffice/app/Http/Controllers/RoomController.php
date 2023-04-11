@@ -20,7 +20,7 @@ class RoomController extends Controller
 {
     public function index(Request $request) {
         $roomList = empty($request->input('dto')) && empty($request->input('dfrom')) && empty($request->input('location')) ? RoomResource::collection(Room::where('approve', true)->get()) : $this->search($request);
-        return view('User/home', [
+        return Auth::user()->role == UserRoleEnum::Admin ? redirect('/admin') : view('User/home', [
             'roomslist' =>  $roomList,
             'location' => $request->location,
             'dfrom' => $request->dfrom,
@@ -43,13 +43,14 @@ class RoomController extends Controller
         $sdfrom =  $request->get('dfrom');
         $sdto =  $request->get('dto');
         $location = $request->string('location');
+        $sroom = [];
         if (!empty($request->input('dfrom')) && !empty($request->input('dto'))) {
             
             $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')
             ->whereNull('bookings.start_date')->where('approve', true)
             ->orwhere(
                     function ($query) use ($sdfrom, $sdto) {
-                        $query->where('bookings.start_date', '<' ,$sdfrom)->whereNot('bookings.end_date', '>=' ,$sdfrom)
+                        $query->where('bookings.start_date', '>' ,$sdfrom)->whereNot('bookings.end_date', '<=' ,$sdfrom)
                         ->where('bookings.start_date', '<' ,$sdto)->whereNot('bookings.end_date', '>=' ,$sdto);
                     }
                 )
@@ -66,7 +67,7 @@ class RoomController extends Controller
             $sroom = Room::distinct()->leftjoin('bookings', 'bookings.room_id', '=', 'rooms.id')->whereNull('bookings.start_date')->where('approve', true)
             ->orwhere(
                 function ($query) use ($sdfrom) {
-                    $query->where('bookings.start_date', '<' ,$sdfrom)->whereNot('bookings.end_date', '>=' ,$sdfrom);
+                    $query->where('bookings.start_date', '>' ,$sdfrom)->whereNot('bookings.end_date', '<=' ,$sdfrom);
                 }
                 )
             ->when($location, function (Builder $query, string $location){
@@ -94,7 +95,7 @@ class RoomController extends Controller
             ->get();
 
         } else {
-            $sroom = DB::table('rooms')->where('approve', true)
+            $sroom = Room::distinct()->where('approve', true)
             ->when($location, function (Builder $query, string $location){
                 $query->where('location', $location);
             })

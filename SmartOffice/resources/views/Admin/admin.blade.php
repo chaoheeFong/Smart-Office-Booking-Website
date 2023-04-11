@@ -11,8 +11,19 @@ $bookings = ['','']
                 <div>
                     <h2>Latest Booking</h2>
                     <div class="h-20rem listBox">
-                        @foreach ($bookings as $item)
-                            <x-admin-booking-card booking={{$item}} />
+                        @foreach ($latestBookings as $booking)
+                            <div class="p-card p-2 h-10rem w-full">
+                                <div>
+                                    <div class="p-card-title">Name: {{$booking->name}}</div>
+                                    <div class="p-card-subtitle">Room: {{$booking->room}}</div>
+                                    <div class="p-card-subtitle">Duration: {{substr($booking->start_date, 0, 10)}} - {{substr($booking->end_date, 0, 10)}}</div>
+                                </div>
+                                <div class="flex flex-row gap-1 justify-content-end">
+                                    <button class="p-button p-1" ><a href="/bookings/{{$booking->id}}/view" class="text-0"><i class="pi pi-book p-1"></i></a></button>
+                                    <button class="p-button p-button-success p-1" ><a href="/bookings/{{$booking->id}}/edit" class="text-0"><i class="pi pi-pencil p-1"></i></a></button>
+                                    <button class="p-button p-button-danger p-button-success p-1" ><a href="/bookings/{{$booking->id}}/delete" class="text-0"><i class="pi pi-trash p-1"></i></a></button>
+                                </div>
+                            </div>
                         @endforeach
                         <a href="" class="no-underline text-cyan-900">End Here...</a>
                     </div>
@@ -44,11 +55,11 @@ $bookings = ['','']
                     <div class="grid">
                         <div class="summuryBox bg-blue-200">
                             <h3 class="pt-1 pl-3">Today's Booking</h3>
-                            <h3 class="absolute right-0 pr-3 top-50" >30</h3>
+                            <h3 class="absolute right-0 pr-3 top-50" >{{$todayBooking}}</h3>
                         </div>
                         <div class="summuryBox bg-green-200">
                             <h3 class="pt-1 pl-3">Available Seats</h3>
-                            <h3 class="absolute right-0 pr-3 top-50" >30</h3>
+                            <h3 class="absolute right-0 pr-3 top-50" >{{$availableSeats}}</h3>
                         </div>
                         <div class="summuryBox bg-yellow-200">
                             <h3 class="pt-1 pl-3">Room Request</h3>
@@ -56,7 +67,7 @@ $bookings = ['','']
                         </div>
                         <div class="summuryBox bg-red-200">
                             <h3 class="pt-1 pl-3">Total Sales</h3>
-                            <h3 class="absolute right-0 pr-3 top-50" >30</h3>
+                            <h3 class="absolute right-0 pr-3 top-50" >RM {{$totalSales}}</h3>
                         </div>
                     </div>
                 </div>

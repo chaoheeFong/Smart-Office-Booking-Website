@@ -27,9 +27,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Admin route  
     Route::group(['middleware' => 'can:isAdmin'], function () {
         Route::get('/admin', [AdminController::class, 'adminHome']);
-        Route::get('/bookingList', function () {
-            return view('Admin/adminBookingList');
-        });
+        Route::get('/bookingList', [AdminController::class, 'bookingList']);
         Route::get('/roomList', [AdminController::class, 'adminRoomList']);
         //admin action
         Route::get('/approveRoom/{id}', [RoomController::class, 'approveRoom'])->name('room.approve');
@@ -54,6 +52,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('User.edit');
     Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings/{booking}/delete', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::get('/bookings/{booking}/view', [BookingController::class, 'viewDetails'])->name('bookings.view');
+    Route::post('/bookings/{booking}/updateStatus', [BookingController::class, 'updateStatus']);
 
 
     Route::get('/search', [RoomController::class, 'search']);
@@ -63,9 +64,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/deleteRoom/{id}', [RoomController::class, 'deleteRoom'])->name('room.delete');
     Route::get('/editRoom/{id}', [RoomController::class, 'edit'])->name('room.edit');
     Route::post('/editRoom', [RoomController::class, 'update']); 
-    Route::get('/mybooking', function () {
+    Route::get('/mybooking', [function () {
         return view('User/mybooking');
-    });
+    }]);
     Route::post('/bookingConfirmation',  [BookingController::class, 'bookingConfirmation']);
 
     

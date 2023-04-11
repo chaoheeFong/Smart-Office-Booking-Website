@@ -19,9 +19,8 @@ $bookings = ['','']
                       <div class="p-card-subtitle">Description: {{$roomDetails->description}}</div>
                     </div>
                     <div class="flex flex-row gap-1 justify-content-end">
-                        <button class="p-button p-1"><i class="pi pi-book p-1"></i></button>
-                        <button class="p-button p-button-success p-1"><i class="pi pi-pencil p-1"></i></button>
-                        <button class="p-button p-button-danger p-button-success p-1" ><i class="pi pi-trash p-1"></i></button>
+                        <button class="p-button p-button-success p-1" ><a href="/editRoom/{{$roomDetails->id}}" class="text-0"><i class="pi pi-pencil p-1"></i></a></button>
+                        <button class="p-button p-button-danger p-button-success p-1" ><a href="/deleteRoom/{{$roomDetails->id}}" class="text-0"><i class="pi pi-trash p-1"></i></a></button>
                     </div>  
                 </div>
                 @endforeach
@@ -42,9 +41,8 @@ $bookings = ['','']
                       <div class="p-card-subtitle">Description: {{$roomDetails->description}}</div>
                     </div>
                     <div class="flex flex-row gap-1 justify-content-end">
-                        <button class="p-button p-1"><i class="pi pi-book p-1"></i></button>
-                        <button class="p-button p-button-success p-1"><i class="pi pi-pencil p-1"></i></button>
-                        <button class="p-button p-button-danger p-button-success p-1" ><i class="pi pi-trash p-1"></i></button>
+                        <button class="p-button p-button-success p-1" ><a href="/editRoom/{{$roomDetails->id}}" class="text-0"><i class="pi pi-pencil p-1"></i></a></button>
+                        <button class="p-button p-button-danger p-button-success p-1" ><a href="/deleteRoom/{{$roomDetails->id}}" class="text-0"><i class="pi pi-trash p-1"></i></a></button>
                     </div>  
                 </div>
                 @endforeach

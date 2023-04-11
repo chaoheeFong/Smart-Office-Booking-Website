@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Booking;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -11,9 +12,10 @@ class adminBookingCard extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $booking;
+    public function __construct(string $booking)
     {
-        //
+        $this->$booking = $booking;//
     }
 
     /**

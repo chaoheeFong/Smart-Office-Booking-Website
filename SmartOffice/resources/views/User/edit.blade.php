@@ -1,7 +1,7 @@
 @extends(Auth::user()->role == App\Enum\UserRoleEnum::Admin ? 'layouts.adminLayout' : 'layouts.userLayout')
 @section('main_content')
     <div class="container">
-        <h1>Edit Booking</h1>
+        <h1 class="text-white">Edit Booking</h1>
 
         <form action="{{ route('bookings.update', $booking->id) }}" method="POST">
             @csrf

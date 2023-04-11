@@ -83,7 +83,7 @@ class BookingController extends Controller
         $bookingConfirmation = new Booking();
 
         $bookingConfirmation->room_id = $request->input('room_id');
-        $bookingConfirmation->user_id = auth()->user()->id;
+        $bookingConfirmation->user_id = $request->exists(['user_id']) ? $request->input('user_id') : auth()->user()->id;
         $bookingConfirmation->booking_status = BookingStatusEnum::Created;
         $bookingConfirmation->start_date = $sdfrom;
         $bookingConfirmation->end_date = $sdto;
@@ -190,4 +190,20 @@ class BookingController extends Controller
         return redirect()->to('/mybooking')->with('success', 'Booking deleted successfully');
     }
 
+    public function viewDetails(Booking $booking) {
+        $booking = Booking::where('bookings.id', $booking->id)->join('rooms', 'bookings.room_id', 'rooms.id')->join('users', 'bookings.user_id', 'users.id')->
+                    select(['rooms.name AS room', 'users.name AS user', 'bookings.start_date', 'bookings.end_date', 'bookings.booking_date', 'bookings.total_price','bookings.booking_status', 'bookings.id AS id']) 
+                    ->first();
+        return view('User/bookingDetails', [
+            'booking' => $booking
+        ]);
+    }
+
+    public function updateStatus(Request $request, Booking $booking) {
+        $update = Booking::findorFail($booking->id);
+        $update->booking_status = $request->status;
+        $update->save(); 
+
+        return redirect()->back();
+    }
 }

@@ -32,7 +32,7 @@
     </div>
     <div class="col-10">
         <div class="form-control">
-            <label>Image of the office: </label>
+            <label class="text-black" >Image of the office: </label>
             <input type="file" name="image"><br>
         </div>
     </div>
