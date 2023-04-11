@@ -1,6 +1,4 @@
-@extends('layouts.userLayout')
-
-
+@extends(Auth::user()->role == App\Enum\UserRoleEnum::Admin ? 'layouts.adminLayout' : 'layouts.userLayout')
 
 @section('main_content')
 
@@ -13,7 +11,7 @@
           <hr />
           <div class=" card-title pricing-card-title text-success h1 w-100" style="display: grid;">
             <span class="float-left text-xl fw-bold text-start">Price:</span>
-            <span class="float-right text-xl fw-bold text-end">${{$room[0]['price']}}</span>
+            <span class="float-right text-xl fw-bold text-end">RM{{$room[0]['price']}}/Day</span>
 
             </div>
           <hr />
@@ -50,7 +48,6 @@
     <form  method="POST" class="bg-success pb-3" action="/bookingConfirmation">
     @csrf
     <input type="hidden" name="room_id" value="{{$room[0]['id']}}"/>
-    <input type="hidden" name="booking_status" value="success"/> 
     <div class="row py-3">
         <div class="col-2"></div>
         <div class="col-3">

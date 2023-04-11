@@ -15,16 +15,7 @@ use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
-    public function adminReadList() {
-        
-        if(Gate::allows('isAdmin')){
-        $roomsList = Room::where('approve', false)->get();
-        $countRoomList = $roomsList->count();
-        return view('Admin/admin', [
-            'roomsDetails' => $roomsList,
-            'countRoomList' => $countRoomList]);
-        }
-    }
+    
 
     
 }

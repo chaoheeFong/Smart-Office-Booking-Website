@@ -17,16 +17,15 @@ class RoomImagesController extends Controller
      */
     public function storeImage(Request $request,int $roomId){
         
-<<<<<<< Updated upstream
         if($request->file('image')){
+
             $file= $request->file('image');
-            $filename= date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('public/Images'), $filename);
+            $imageName = time().'.'.$request->image->extension();  
+            $file-> move(public_path('public/Images'), $imageName);
             return RoomImages::create([
-                'filename' => $filename,
+                'filename' => $imageName,
                 'room_id' => $roomId,
             ]);
-=======
         
         
 
@@ -45,7 +44,6 @@ class RoomImagesController extends Controller
             return $roomImage;
         } else {
             return response()->json(['error' => 'Image is null.']);
->>>>>>> Stashed changes
         }
     }
        

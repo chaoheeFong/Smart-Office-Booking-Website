@@ -14,7 +14,7 @@ class RoomPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;//
     }
 
     /**
@@ -22,7 +22,7 @@ class RoomPolicy
      */
     public function view(User $user, Room $room): bool
     {
-        //
+        return $user->id === $room->user_id;//
     }
 
     /**
@@ -38,7 +38,7 @@ class RoomPolicy
      */
     public function update(User $user, Room $room): bool
     {
-        //
+       return $user->id === $room->user_id; //
     }
 
     /**
@@ -46,7 +46,7 @@ class RoomPolicy
      */
     public function delete(User $user, Room $room): bool
     {
-        //
+        return $user->id === $room->user_id; //
     }
 
     /**

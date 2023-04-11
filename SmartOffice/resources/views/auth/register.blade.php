@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -65,7 +66,22 @@
                                 @enderror
                             </div>
                         </div>
-                        <input type="hidden" name="role" value="{{$role}}">
+
+                        @can('isAdmin')
+                            <div class="row mb-3">
+                                <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Role') }}</label>
+
+                                <div class="col-md-6">
+                                    <select name="role" id="role" class="p-1 mt-1">
+                                        @foreach (\App\Enum\UserRoleEnum::cases() as $role)
+                                            <option value="{{$role}}">{{$role}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endcan
+                        
+                        
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

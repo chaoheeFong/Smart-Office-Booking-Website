@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -33,13 +34,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected function redirectTo() {
-        if (Auth::user()->role == UserRoleEnum::User) {
-            return '/home';
-        } else {
-            return '/admin';
-        }
-    }
+    protected $redirectTo = '/login';
     /**
      * Create a new controller instance.
      *
@@ -47,17 +42,15 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        
     }
 
     /*
     *View register page 
     */
-    protected function showUserRegisterForm() {
-        return view('auth/register', ['role' => 'user']);
-    }
-    protected function showAdminRegisterForm() {
-        return view('auth/register', ['role' => 'admin']);
+    protected function showRegisterForm() {
+        $roleOptions = UserRoleEnum::cases();
+        return view('auth/register')->with('roleOptions'->$roleOptions);
     }
 
     /**
@@ -84,6 +77,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if(!array_key_exists('role', $data)) {
+            $data['role'] = UserRoleEnum::User;
+        }
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -93,19 +90,8 @@ class RegisterController extends Controller
     }
 
     protected function registerUser(Request $request) {
-        $this ->validator($request->all())->validate();
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
-
-        if ($request->role == 'admin') {
-            return Route::permanentRedirect('/register','/admin');
-        }
-        else{
-            return Route::permanentRedirect('/register','/home');
-        }
+        $this->validator($request->all())->validate();
+        $user = $this->create($request->all());
+        return redirect()->back();
     }
 }
