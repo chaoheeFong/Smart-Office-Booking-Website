@@ -11,7 +11,7 @@ class RoomImages extends Model
     use HasFactory;
 
     protected $fillable = [
-        'url',
+        'filename',
         'room_id',
     ];
 
