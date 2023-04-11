@@ -18,7 +18,7 @@
           <p class="lead">{{$room[0]['description']}}</p>
         </div>
         <div class="col-md-5 order-md-1">
-          <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" src="{{$room[0]['photo']}}" data-holder-rendered="true" style="width: 500px; height: auto;">
+          <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="{{$room[0]['url']}}" src="{{URL::to('/')}}/Images/{{$room[0]['url']}}" data-holder-rendered="true" style="width: 500px; height: auto;">
         </div>
       </div>
 </section>

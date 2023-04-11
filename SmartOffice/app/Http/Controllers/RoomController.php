@@ -113,9 +113,8 @@ class RoomController extends Controller
         if ($request->input('name') != null)
             $name = $request->input('name');
         else $name = '';
-
         return view('User/oneroom', [
-            'room' =>  RoomResource::collection(Room::where('id', $id)->get()),
+            'room' =>  Room::where('rooms.id', $id)->join('room_images', 'rooms.id', 'room_images.room_id')->get(),
             'name' => $name
         ]);
     }
